@@ -17,13 +17,16 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+const racks = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3']
+
+
 const Example = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api');
+        const response = await axios.get('http://localhost:3001/getCats');
         setData(response.data);
       } catch (error) {
         console.log(error.message);
@@ -38,31 +41,36 @@ const Example = () => {
         accessorKey: 'id',
         header: 'ID',
         enableEditing: false,
-        width: 80,
+        width: 100,
+        Edit: () => null, //Exclud the id column from the edit an create windows
       },
       {
         accessorKey: 'name',
         header: 'Name',
         enableEditing: true,
-        width: 80,
+        width: 200,
       },
       {
         accessorKey: 'location',
         header: 'Location',
         enableEditing: true,
-        width: 80,
+        width: 100,
       },
       {
         accessorKey: 'rack',
         header: 'Rack',
         enableEditing: true,
-        width: 80,
+        editSelectOptions: racks,
+        muiEditTextFieldProps: {
+          select: true,
+        },
+        width: 100,
       },
       {
         accessorKey: 'mark',
         header: 'Mark',
         enableEditing: true,
-        width: 80,
+        width: 100,
       },
     ],
     [],
@@ -76,12 +84,12 @@ const Example = () => {
       setData(response.data.rows);
       table.setCreatingRow(null); // Exit creating mode
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error('Error creating Cat:', error);
     }
   };
 
   // UPDATE action
-  const handleSaveUser = async ({ values, table }) => {
+  const handleSaveCat = async ({ values, table }) => {
     const rowId = values.id;
     try {
       // Post values to server
@@ -89,19 +97,19 @@ const Example = () => {
       setData(response.data.rows);
       table.setEditingRow(null); // Exit editing mode
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error('Error updating cat:', error);
     }
   };
 
   // DELETE action
   const openDeleteConfirmModal = async (row) => {
     const rowId = row.original.id;
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm('Are you sure you want to delete this cat?')) {
       try {
         const response = await axios.delete(`http://localhost:3001/deleteCat/${rowId}`);
         setData(response.data.rows);
       } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error('Error deleting cat:', error);
       }
     }
   };
@@ -115,7 +123,20 @@ const Example = () => {
     enableColumnDragging: true,
     enableColumnOrdering: true,
     enableColumnResizing: true,
-
+    muiTableHeadCellProps: {
+      sx: {
+        '& .Mui-TableHeadCell-Content': {
+          justifyContent: 'center',
+        },
+      },
+    },
+    displayColumnDefOptions: {
+      'mrt-row-actions': {
+        header: 'Actions', //change header text
+        size: 200, //make actions column wider
+      },
+    },
+    positionActionsColumn: 'last',
     // enableRowSelection: true,
     getRowId: (row) => row.id,
     muiTableContainerProps: {
@@ -124,12 +145,12 @@ const Example = () => {
       },
     },
     onCreatingRowSave: handleCreateCat,
-    onEditingRowSave: handleSaveUser,
+    onEditingRowSave: handleSaveCat,
     renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
       <>
-        <DialogTitle variant="h4">Create New User</DialogTitle>
+        <DialogTitle variant="h4">Create New Cat</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {internalEditComponents.filter(component => component.key !== `mrt-row-create_id`)} {/* Exclude ID field */}
+          {internalEditComponents}
         </DialogContent>
         <DialogActions>
           <MRT_EditActionButtons variant="text" table={table} row={row} />
@@ -138,9 +159,9 @@ const Example = () => {
     ),
     renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
       <>
-        <DialogTitle variant="h4">Edit User</DialogTitle>
+        <DialogTitle variant="h4">Edit Cat</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {internalEditComponents.filter(component => component.key !== `${row.id}_id`)} {/* Exclude ID field */}
+          {internalEditComponents}
         </DialogContent>
         <DialogActions>
           <MRT_EditActionButtons variant="text" table={table} row={row} />
@@ -168,7 +189,7 @@ const Example = () => {
           table.setCreatingRow(true);
         }}
       >
-        Create New User
+        Create New Cat
       </Button>
     ),
     muiTableBodyProps: {

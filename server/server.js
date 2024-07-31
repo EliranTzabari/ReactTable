@@ -27,7 +27,7 @@ async function getCats() {
   return result.rows
 }
 
-app.get('/api', async (req, res) => {
+app.get('/getCats', async (req, res) => {
   const data = await getCats()
   res.json(data);
 });
