@@ -17,7 +17,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const racks = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3']
+const racks = ['A1', 'A2', 'A3', 'B1', 'B2', 'B3'] // temporary array for racks dropList
 
 
 const Example = () => {
@@ -26,7 +26,7 @@ const Example = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/getCats');
+        const response = await axios.get('http://localhost:3001/getCats'); // get request from the server
         setData(response.data);
       } catch (error) {
         console.log(error.message);
@@ -35,7 +35,7 @@ const Example = () => {
     fetchData();
   }, []);
 
-  const columns = useMemo(
+  const columns = useMemo(       // columns definition
     () => [
       {
         accessorKey: 'id',
@@ -50,7 +50,7 @@ const Example = () => {
         muiTableBodyCellProps: {
           align: 'left',
         },
-        Edit: () => null, //Exclud the id column from the edit an create windows
+        Edit: () => null, //Exclud the id column from the edit and create windows
       },
       {
         accessorKey: 'name',
@@ -84,7 +84,6 @@ const Example = () => {
         accessorKey: 'rack',
         header: 'Rack',
         enableEditing: true,
-        editVariant: 'select',
         editSelectOptions: racks,
         muiEditTextFieldProps: {
           select: true,
@@ -166,6 +165,10 @@ const Example = () => {
     enableColumnResizing: true,
     enableRowNumbers: true,
     enableRowSelection: true,
+    enableStickyHeader: true,
+    enableColumnActions: false,
+    columnFilterDisplayMode: 'popover',
+
     muiTableBodyProps: {
       sx: {
         //stripe the rows, make odd rows a darker color
@@ -183,14 +186,38 @@ const Example = () => {
       'mrt-row-actions': {
         header: 'Actions', //change header text
         size: 100, //make actions column wider
+        muiTableHeadCellProps: {
+          align: 'center', //change actions head cell props
+        },
+        muiTableBodyCellProps: {
+          align: 'center', //change actions head cell props
+        },
+      },
+      'mrt-row-numbers': {
+          size: 30,
+          muiTableHeadCellProps: {
+            align: 'center', //change row numbering head cell props
+          },
+          muiTableBodyCellProps: {
+            align: 'center', //change row numbering head cell props
+          },
+        },
+        'mrt-row-select': {
+        size: 20,
+        muiTableHeadCellProps: {
+          align: 'center', //change row select head cell props
+        },
+        muiTableBodyCellProps: {
+          align: 'center', //change row select head cell props
+        },
       },
     },
     positionActionsColumn: 'last', // make the action column to be last position
     getRowId: (row) => row.id,
     muiTableContainerProps: {
       sx: {
-        minHeight: '300px',
-        maxHeight: '550px',
+        minHeight: '580px',
+        maxHeight: '580px',
       },
     },
     onCreatingRowSave: handleCreateCat,
@@ -218,7 +245,7 @@ const Example = () => {
       </>
     ),
     renderRowActions: ({ row, table }) => (
-      <Box sx={{ display: 'flex', gap: '0.5rem'}}>
+      <Box sx={{ display: 'flex', gap: '0.5rem' }}>
         <Tooltip title="Edit">
           <IconButton onClick={() => table.setEditingRow(row)}>
             <EditIcon />
@@ -233,17 +260,17 @@ const Example = () => {
     ),
     renderTopToolbarCustomActions: ({ table }) => (
       <Box sx={{ display: 'flex', gap: '1rem', p: '4px' }}>
-      <Button
-        variant="contained"
-        onClick={() => {
-          table.setCreatingRow(true);
-        }}
-      >
-        Create New Cat
-      </Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            table.setCreatingRow(true);
+          }}
+        >
+          Create New Cat
+        </Button>
       </Box>
     ),
-    
+
     initialState: {
       columnVisibility: {
         id: false,
