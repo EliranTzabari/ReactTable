@@ -41,36 +41,77 @@ const Example = () => {
         accessorKey: 'id',
         header: 'ID',
         enableEditing: false,
-        width: 100,
+        size: 100,
+        minSize: 140,
+        maxSize: 250,
+        muiTableHeadCellProps: {
+          align: 'left',
+        },
+        muiTableBodyCellProps: {
+          align: 'left',
+        },
         Edit: () => null, //Exclud the id column from the edit an create windows
       },
       {
         accessorKey: 'name',
         header: 'Name',
         enableEditing: true,
-        width: 200,
+        size: 200,
+        minSize: 140,
+        maxSize: 250,
+        muiTableHeadCellProps: {
+          align: 'left',
+        },
+        muiTableBodyCellProps: {
+          align: 'left',
+        },
       },
       {
         accessorKey: 'location',
         header: 'Location',
         enableEditing: true,
-        width: 100,
+        size: 200,
+        minSize: 140,
+        maxSize: 250,
+        muiTableHeadCellProps: {
+          align: 'left',
+        },
+        muiTableBodyCellProps: {
+          align: 'left',
+        },
       },
       {
         accessorKey: 'rack',
         header: 'Rack',
         enableEditing: true,
+        editVariant: 'select',
         editSelectOptions: racks,
         muiEditTextFieldProps: {
           select: true,
         },
-        width: 100,
+        size: 150,
+        minSize: 110,
+        maxSize: 250,
+        muiTableHeadCellProps: {
+          align: 'left',
+        },
+        muiTableBodyCellProps: {
+          align: 'left',
+        },
       },
       {
         accessorKey: 'mark',
         header: 'Mark',
         enableEditing: true,
-        width: 100,
+        size: 150,
+        minSize: 130,
+        maxSize: 250,
+        muiTableHeadCellProps: {
+          align: 'left',
+        },
+        muiTableBodyCellProps: {
+          align: 'left',
+        },
       },
     ],
     [],
@@ -123,25 +164,33 @@ const Example = () => {
     enableColumnDragging: true,
     enableColumnOrdering: true,
     enableColumnResizing: true,
-    muiTableHeadCellProps: {
+    enableRowNumbers: true,
+    enableRowSelection: true,
+    muiTableBodyProps: {
       sx: {
-        '& .Mui-TableHeadCell-Content': {
-          justifyContent: 'center',
+        //stripe the rows, make odd rows a darker color
+        '& tr:nth-of-type(odd) > td': {
+          backgroundColor: '#EEF7FF',
         },
+      },
+    },
+    muiTableBodyCellProps: {
+      sx: {
+        borderRight: '2px solid #021526', //add a border between columns
       },
     },
     displayColumnDefOptions: {
       'mrt-row-actions': {
         header: 'Actions', //change header text
-        size: 200, //make actions column wider
+        size: 100, //make actions column wider
       },
     },
-    positionActionsColumn: 'last',
-    // enableRowSelection: true,
+    positionActionsColumn: 'last', // make the action column to be last position
     getRowId: (row) => row.id,
     muiTableContainerProps: {
       sx: {
-        minHeight: '500px',
+        minHeight: '300px',
+        maxHeight: '550px',
       },
     },
     onCreatingRowSave: handleCreateCat,
@@ -169,7 +218,7 @@ const Example = () => {
       </>
     ),
     renderRowActions: ({ row, table }) => (
-      <Box sx={{ display: 'flex', gap: '1rem' }}>
+      <Box sx={{ display: 'flex', gap: '0.5rem'}}>
         <Tooltip title="Edit">
           <IconButton onClick={() => table.setEditingRow(row)}>
             <EditIcon />
@@ -183,6 +232,7 @@ const Example = () => {
       </Box>
     ),
     renderTopToolbarCustomActions: ({ table }) => (
+      <Box sx={{ display: 'flex', gap: '1rem', p: '4px' }}>
       <Button
         variant="contained"
         onClick={() => {
@@ -191,20 +241,9 @@ const Example = () => {
       >
         Create New Cat
       </Button>
+      </Box>
     ),
-    muiTableBodyProps: {
-      sx: {
-        //stripe the rows, make odd rows a darker color
-        '& tr:nth-of-type(odd) > td': {
-          backgroundColor: '#E7E8D8',
-        },
-      },
-    },
-    muiTableBodyCellProps: {
-      sx: {
-        borderRight: '2px solid #021526', //add a border between columns
-      },
-    },
+    
     initialState: {
       columnVisibility: {
         id: false,
